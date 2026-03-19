@@ -12,16 +12,35 @@ type Props = {
 };
 
 export default function MovieThumbnail({ movie }: Props) {
+  const title =
+    movie.name ||
+    movie.alternativeName ||
+    "Без названия";
+
+  const rating = movie.rating?.kp
+    ? movie.rating.kp.toFixed(1)
+    : "—";
+
   const hasImage = !!movie.poster?.url;
 
   return (
-    <Card sx={{ height: "100%" }}>
+    <Card
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        transition: "0.2s",
+        "&:hover": {
+          transform: "scale(1.02)",
+        },
+      }}
+    >
       {hasImage ? (
         <CardMedia
           component="img"
           height="300"
           image={movie.poster.url}
-          alt={movie.name}
+          alt={title}
         />
       ) : (
         <Box
@@ -42,17 +61,25 @@ export default function MovieThumbnail({ movie }: Props) {
         </Box>
       )}
 
-      <CardContent>
-        <Typography variant="subtitle1" fontWeight={600}>
-          {movie.name}
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography
+          variant="subtitle1"
+          fontWeight={600}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {title}
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
-          {movie.year}
+          {movie.year || "—"}
         </Typography>
 
         <Typography variant="body2">
-          {movie.rating?.kp || "—"}
+          {rating}
         </Typography>
       </CardContent>
     </Card>
