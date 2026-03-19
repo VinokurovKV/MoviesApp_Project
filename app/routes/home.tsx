@@ -1,8 +1,9 @@
 import type { Route } from "./+types/home";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { fetchMovies } from "../api/movies";
 import { useLoaderData } from "react-router";
 import MovieThumbnail from "../components/MovieThumbnail";
+import { useEffect, useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Movies App" }];
@@ -16,22 +17,54 @@ export async function loader() {
 export default function Home() {
   const data = useLoaderData() as any;
 
+  const [movies, setMovies] = useState(data.docs);
+  const [page, setPage] = useState(2);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 200 &&
+        !loading
+      ) {
+        setLoading(true);
+
+        const newData = await fetchMovies(page);
+
+        setMovies((prev: any) => [...prev, ...newData.docs]);
+        setPage((prev) => prev + 1);
+
+        setLoading(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [page, loading]);
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
         Фильмы
       </Typography>
 
-      <Grid container spacing={2}>
-        {data.docs?.map((movie: any) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 3 }}
-            key={movie.id}
-          >
-            <MovieThumbnail movie={movie} />
-          </Grid>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+        gap={2}
+      >
+        {movies.map((movie: any) => (
+          <MovieThumbnail key={movie.id} movie={movie} />
         ))}
-      </Grid>
+      </Box>
+
+      {loading && (
+        <Typography align="center" sx={{ mt: 2 }}>
+          Загрузка...
+        </Typography>
+      )}
     </Box>
   );
 }
