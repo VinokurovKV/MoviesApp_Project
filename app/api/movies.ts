@@ -2,24 +2,26 @@ import axios from "axios";
 
 const API_KEY = import.meta.env.VITE_KINOPOISK_API_KEY;
 
-const getApiUrl = () => {
-  if (typeof window === "undefined") {
-    return "https://api.kinopoisk.dev/v1.4/movie";
+const api = axios.create({
+  baseURL: "https://api.kinopoisk.dev/v1.4",
+  headers: {
+    "X-API-KEY": API_KEY,
+  },
+});
+
+export async function fetchMovies(page: number, filters?: any) {
+  const params: any = {
+    page,
+    limit: 50,
+    "rating.kp": filters?.rating || "1-10",
+    year: filters?.year || "1900-2025",
+  };
+
+  if (filters?.genres?.length) {
+    params["genres.name"] = filters.genres;
   }
 
-  return "/api/v1.4/movie";
-};
+  const res = await api.get("/movie", { params });
 
-export const fetchMovies = async (page: number = 1) => {
-  const response = await axios.get(getApiUrl(), {
-    headers: {
-      "X-API-KEY": API_KEY,
-    },
-    params: {
-      page,
-      limit: 50,
-    },
-  });
-
-  return response.data;
-};
+  return res.data;
+}
