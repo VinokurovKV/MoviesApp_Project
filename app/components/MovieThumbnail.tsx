@@ -6,12 +6,16 @@ import {
   Box,
 } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
+import StarIcon from "@mui/icons-material/Star";
+import { useNavigate } from "react-router";
 
 type Props = {
   movie: any;
 };
 
 export default function MovieThumbnail({ movie }: Props) {
+  const navigate = useNavigate();
+
   const title =
     movie.name ||
     movie.alternativeName ||
@@ -25,10 +29,12 @@ export default function MovieThumbnail({ movie }: Props) {
 
   return (
     <Card
+      onClick={() => navigate(`/movie/${movie.id}`)}
       sx={{
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        cursor: "pointer",
         transition: "0.2s",
         "&:hover": {
           transform: "scale(1.02)",
@@ -78,9 +84,12 @@ export default function MovieThumbnail({ movie }: Props) {
           {movie.year || "—"}
         </Typography>
 
-        <Typography variant="body2">
-          {rating}
-        </Typography>
+        <Box display="flex" alignItems="center" gap={0.5}>
+          <StarIcon sx={{ color: "#f5c518", fontSize: 18 }} />
+          <Typography variant="body2">
+            {rating}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );

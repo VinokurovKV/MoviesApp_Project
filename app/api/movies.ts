@@ -9,6 +9,11 @@ const api = axios.create({
   },
 });
 
+export async function fetchMovieById(id: string) {
+  const res = await api.get(`/movie/${id}`);
+  return res.data;
+}
+
 export async function fetchMovies(page: number, filters?: any) {
   const params: any = {
     page,
