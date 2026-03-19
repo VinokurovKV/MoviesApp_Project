@@ -1,13 +1,22 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Typography, Box } from "@mui/material";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Movies App" }
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        Фильмы
+      </Typography>
+
+      <Typography>
+        Здесь будет список фильмов
+      </Typography>
+    </Box>
+  );
 }
