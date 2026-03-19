@@ -1,7 +1,8 @@
 import type { Route } from "./+types/home";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Grid } from "@mui/material";
 import { fetchMovies } from "../api/movies";
 import { useLoaderData } from "react-router";
+import MovieThumbnail from "../components/MovieThumbnail";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Movies App" }];
@@ -21,9 +22,16 @@ export default function Home() {
         Фильмы
       </Typography>
 
-      <pre style={{ fontSize: 12 }}>
-        {JSON.stringify(data.docs?.slice(0, 3), null, 2)}
-      </pre>
+      <Grid container spacing={2}>
+        {data.docs?.map((movie: any) => (
+          <Grid
+            size={{ xs: 12, sm: 6, md: 3 }}
+            key={movie.id}
+          >
+            <MovieThumbnail movie={movie} />
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 }
