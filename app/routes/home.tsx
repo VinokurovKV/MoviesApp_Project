@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import Filters from "../components/Filters";
 import MovieThumbnail from "../components/MovieThumbnail";
 import { fetchMovies } from "../api/movies";
+import ComparePanel from "../components/ComparePanel";
 
 export async function loader({ request }: any) {
   const url = new URL(request.url);
@@ -92,6 +93,8 @@ export default function Home() {
       <Typography variant="h4" mb={3}>
         Фильмы
       </Typography>
+
+      <ComparePanel />
 
       <Filters onApply={handleApplyFilters} />
 

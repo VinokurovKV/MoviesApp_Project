@@ -14,6 +14,8 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { isFavorite, toggleFavorite } from "../utils/favorites";
 import FavoriteModal from "./FavoriteModal";
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import { isInCompare, toggleCompare } from "../utils/compare";
 
 type Props = {
   movie: any;
@@ -57,6 +59,22 @@ export default function MovieThumbnail({ movie }: Props) {
     setOpen(false);
     };
 
+  const [inCompare, setInCompare] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      setInCompare(isInCompare(movie.id));
+    };
+
+    update();
+
+    window.addEventListener("compareUpdated", update);
+
+    return () => {
+      window.removeEventListener("compareUpdated", update);
+    };
+  }, [movie.id]);
+
   return (
     <>
       <Card
@@ -86,6 +104,22 @@ export default function MovieThumbnail({ movie }: Props) {
             ) : (
               <FavoriteBorderIcon />
             )}
+          </IconButton>
+        </Box>
+
+        <Box position="absolute" top={8} left={8} zIndex={1}>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              const updated = toggleCompare(movie);
+              setInCompare(updated.some((m: any) => m.id === movie.id));
+            }}
+            sx={{
+              bgcolor: "rgba(255,255,255,0.8)",
+              "&:hover": { bgcolor: "white" },
+            }}
+          >
+            <CompareArrowsIcon color={inCompare ? "primary" : "inherit"} />
           </IconButton>
         </Box>
 
