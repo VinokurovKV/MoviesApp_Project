@@ -31,8 +31,3 @@ npm run dev
 Создать файл `.env` на основе `.env.default`:
 
     VITE_API_KEY=your_api_key
-
-## Ссылки
-
--   GitHub: `<вставьте ссылку>`{=html}
--   Live Demo: `<вставьте ссылку>`{=html}
